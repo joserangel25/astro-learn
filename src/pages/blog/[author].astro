@@ -1,0 +1,64 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BlogPost from "@components/BlogPost.astro";
+import MainLayout from "@layouts/MainLayout.astro";
+
+export const getStaticPaths = async () => {
+  const [authors, blogs] = await Promise.all([
+    getCollection("author"),
+    getCollection("blog"),
+  ]);
+
+  return authors.map((author) => ({
+    params: { author: author.id },
+    props: {
+      blogPosts: blogs.filter(
+        (blogTem) => blogTem.data.author.id === author.id,
+      ),
+      author: author.data,
+    },
+  }));
+};
+
+const { author, blogPosts } = Astro.props;
+---
+
+<MainLayout>
+  <section class="bg-gray-900">
+    <div class="">
+      <div class="text-md text-gray-400 flex flex-row my-5">
+        <Image
+          class="rounded-full"
+          src={author.avatar}
+          alt={author.name}
+          width={50}
+          height={50}
+        />
+
+        <div class="flex flex-col ml-5">
+          <a>{author.name}</a>
+          <span>Listado de todos mis posts</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+        {blogPosts.map((post) => <BlogPost post={post} />)}
+      </div>
+
+      {
+        blogPosts.length === 0 && (
+          <div class="text-center text-gray-400 mt-10">
+            No hay posts de este autor
+          </div>
+        )
+      }
+    </div>
+  </section>
+</MainLayout>
+
+<style is:global>
+  a {
+    @apply text-blue-500 hover:underline;
+  }
+</style>

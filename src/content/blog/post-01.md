@@ -2,9 +2,9 @@
 title: Explorando Funciones de ES6
 date: 2023-06-01
 description: Explorando algunas de las nuevas funciones de ES6 en JavaScript.
-author: jose-rangel
+author: jane-doe
 # image: https://placehold.co/1400x900/
-image: '/assets/images/post-01.png'
+image: 'images/post-01.png'
 tags: [JavaScript, ES6, Programming]
 ---
 
