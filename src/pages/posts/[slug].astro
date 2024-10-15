@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import { FormatterDate } from "../../utils/formatterDate";
+import { Image } from "astro:assets";
+
+export const getStaticPaths = async () => {
+  const collectionPost = await getCollection("blog");
+  const posts = collectionPost.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+  return posts;
+};
+
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+const { title, author, date, image } = post.data;
+console.log({ author });
+---
+
+<MainLayout title={`Post - ${title} `}>
+  <div class="py-10 max-w-3xl mx-auto px-5">
+    <a href="/" id="btn-goback" class="text-white font-medium mb-5 inline-block"
+      >🔙Regresar</a
+    >
+
+    <h1 class="text-white text-3xl" transition:name={`${post.slug}-fade`}>
+      {title}
+    </h1>
+    <h3 class="text-lg font-medium text-gray-500 tracking-wider mb-5">
+      Publicado por: <span class="font-bold text-gray-300">{author}</span> el {
+        FormatterDate.formatDate(date)
+      }
+    </h3>
+
+    <Image
+      style={{ marginBottom: "30px", display: "block" }}
+      src={image}
+      width={200}
+      height={224}
+      alt={`Imagen del post titulado: ${title}`}
+      class="object-cover w-full h-56 rounded-lg"
+    />
+    <h3 class="text-lg text-gray-300 font-bold mt-5">Tabla de contenido</h3>
+    <ol class="prose prose-invert">
+      {
+        headings.map((heading, ind) => (
+          <li>
+            <a
+              href={`#${heading.slug}`}
+              class="no-underline text-gray-300 font-medium"
+            >
+              {ind + 1} - {heading.text}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="prose prose-invert mt-5">
+      <Content />
+    </div>
+
+    <a href="#btn-goback" class="text-white font-medium mt-5 inline-block"
+      >Subir 🔝</a
+    >
+  </div>
+</MainLayout>
