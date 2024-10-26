@@ -1,0 +1,15 @@
+name = "astro-project"
+   type = "webpack"
+   account_id = "ce381fc0bdad445308f9f28bc209df97"
+   workers_dev = true
+   route = ""
+   zone_id = ""
+   compatibility_date = "2023-10-30"
+
+   [site]
+   bucket = "./dist"
+   entry-point = "workers-site"
+
+   [build]
+   command = "pnpm run build"
+   upload.format = "service-worker"
